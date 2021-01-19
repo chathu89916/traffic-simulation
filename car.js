@@ -62,13 +62,13 @@ function addCar(direction, turn) {
                 case null:
                     break;
                 case "left":
-                    if (this.pos.y < 300) {
-                        this.acceleration.x = 0.02;
+                    if (this.pos.x > 300) {
+                        this.acceleration.x = 0.00;
                         this.acceleration.y = 0.02;
                     }
                     break;
                 case "right":
-                    if (this.pos.y < 300) {
+                    if (this.pos.x > 300) {
                         this.acceleration.x = 0.0;
                         this.acceleration.y = -0.02;
                     }
