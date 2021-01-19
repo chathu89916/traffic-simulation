@@ -1,5 +1,5 @@
 var Cars = [];
-var numberofCars = 10;
+var numberofCars = 30;
 var carCount = 0;
 let direction = ['down','up','left','right']
 let turnDirection = ['left','right']
@@ -32,6 +32,7 @@ function draw() {
     if (abs(initialPos.dist(Cars[Cars.length - 1].pos)) < random(width/2 - 300, width/2-25) && carCount < numberofCars) {
       //console.log(i, initialPos.dist(Cars[i].pos), 'car added');
       Cars.push(new addCar(random(direction),random(turnDirection)));
+      console.log(Cars.length);
       carCount++;
     }
     if (Cars[i].pos.dist(initialPos) > 600) {

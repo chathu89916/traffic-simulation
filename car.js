@@ -60,7 +60,7 @@ function addCar(direction, turn) {
         if(this.direction == 'down'){
             if(this.pos.y < 245 && this.red == true){
                 if(this.velocity.y > 0){
-                    this.velocity.y = 0
+                    this.velocity.y = this.velocity.y - this.velocity.y/(250 - this.pos.y);
                 }else{
                     this.velocity.y = 0;
                 }

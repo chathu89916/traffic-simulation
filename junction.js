@@ -70,8 +70,8 @@ function junction(){
 
     }  
     this.redLightDown= function(){
-        var red = frameCount;
-        if(red>0 && red < 300){
+        
+        if(timeController()>0 && timeController() < 300){
             return false;
         }
         else{
@@ -79,8 +79,8 @@ function junction(){
         }
     }
     this.redLightUp= function(){
-        var red = frameCount;
-        if(red>310 && red < 610){
+        
+        if(timeController()>310 && timeController() < 610){
             return false;
         }
         else{
@@ -88,8 +88,8 @@ function junction(){
         }
     }
     this.redLightLeft= function(){
-        var red = frameCount;
-        if(red>620 && red < 920){
+        
+        if(timeController()>620 && timeController() < 920){
             return false;
         }
         else{
@@ -97,8 +97,8 @@ function junction(){
         }
     }
     this.redLightRight= function(){
-        var red = frameCount;
-        if(red>930 && red < 1130){
+        
+        if(timeController()>930 && timeController() < 1130){
             return false;
         }
         else{
@@ -123,5 +123,15 @@ function linedash(x1, y1, x2, y2, delta, style = '-') {
       if (style == '-') { line(xi1, yi1, xi2, yi2); }
       else if (style == '.') { point(xi1, yi1); }
       else if (style == 'o') { ellipse(xi1, yi1, delta/2); }
+    }
+  }
+
+  function timeController(){
+    var timer = frameCount;
+    if(timer< 1130){
+      return timer;
+    }
+    if(timer >= 1130){
+      return (timer -1130 * i);
     }
   }
