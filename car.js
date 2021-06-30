@@ -10,7 +10,7 @@ function addCar(direction, turn) {
     switch (this.direction) {
         case "down":
             this.velocity.x = 0.0;
-            this.velocity.y = 0.0;
+            this.velocity.y = 1.0;
             this.pos.x = 325;
             this.pos.y = 0;
             break;
@@ -36,8 +36,8 @@ function addCar(direction, turn) {
             break;
     }
 
-    this.update = function (red , ppos) {
-        this.red = red;
+    this.update = function (ppos) {
+        // this.red = red;
         this.ppos = ppos;
         if(this.direction == 'up'){
             switch (this.turn) {
@@ -58,16 +58,16 @@ function addCar(direction, turn) {
             }
         }
         if(this.direction == 'down'){
-            if(this.pos.y < 245 && this.red == true){
-                if(this.velocity.y > 0){
-                    this.velocity.y = this.velocity.y - this.velocity.y/(250 - this.pos.y);
-                }else{
-                    this.velocity.y = 0;
-                }
-            }
-            if(this.pos.y < 245 && this.red == false){
-                this.velocity.y = 1;
-            }
+            // if(this.pos.y < 245 && this.red == true){
+            //     if(this.velocity.y > 0){
+            //         this.velocity.y = this.velocity.y - this.velocity.y/(250 - this.pos.y);
+            //     }else{
+            //         this.velocity.y = 0;
+            //     }
+            // }
+            // if(this.pos.y < 245 && this.red == false){
+            //     this.velocity.y = 1;
+            // }
             switch (this.turn) {
                 case null:
                     break;

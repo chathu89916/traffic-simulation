@@ -1,7 +1,41 @@
 function junction(){
+  downLight = true;
+  upLight = true;
+  leftLight = true;
+  rightLight = true;
+
+    this.counter1 = function(){
+      downLight = false;
+  upLight = true;
+  leftLight = true;
+  rightLight = true;
+
+    }
+
+    this.counter2 = function(){
+      downLight = true;
+  upLight = false;
+  leftLight = true;
+  rightLight = true;
+
+    }
+    this.counter3 = function(){
+      downLight = true;
+  upLight = true;
+  leftLight = false;
+  rightLight = true;
+
+    }
+    this.counter4 = function(){
+      downLight = true;
+  upLight = true;
+  leftLight = true;
+  rightLight = false;
+
+    }
     this.lightDown = function(){
         push();
-        var red = this.redLightDown();
+        var red = downLight;
         strokeWeight(5.0);
         if(red == true){
           stroke('red');  
@@ -14,7 +48,7 @@ function junction(){
     this.lightUp = function(){
         push();
         strokeWeight(5.0);
-        var red = this.redLightUp();
+        var red = upLight;
         strokeWeight(5.0);
         if(red == true){
           stroke('red');  
@@ -27,7 +61,7 @@ function junction(){
     this.lightLeft = function(){
         push();
         strokeWeight(5.0);
-        var red = this.redLightLeft();
+        var red = leftLight;
         strokeWeight(5.0);
         if(red == true){
           stroke('red');  
@@ -40,7 +74,7 @@ function junction(){
     this.lightRight = function(){
         push();
         strokeWeight(5.0);
-        var red = this.redLightRight();
+        var red = rightLight;
         strokeWeight(5.0);
         if(red == true){
           stroke('red');  
@@ -69,42 +103,46 @@ function junction(){
         pop();
 
     }  
-    this.redLightDown= function(){
+
+
+
+
+    // this.redLightDown= function(){
         
-        if(timeController()>0 && timeController() < 300){
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
-    this.redLightUp= function(){
+    //     if(timeController()>0 && timeController() < 300){
+    //         return false;
+    //     }
+    //     else{
+    //         return true;
+    //     }
+    // }
+    // this.redLightUp= function(){
         
-        if(timeController()>310 && timeController() < 610){
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
-    this.redLightLeft= function(){
+    //     if(timeController()>310 && timeController() < 610){
+    //         return false;
+    //     }
+    //     else{
+    //         return true;
+    //     }
+    // }
+    // this.redLightLeft= function(){
         
-        if(timeController()>620 && timeController() < 920){
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
-    this.redLightRight= function(){
+    //     if(timeController()>620 && timeController() < 920){
+    //         return false;
+    //     }
+    //     else{
+    //         return true;
+    //     }
+    // }
+    // this.redLightRight= function(){
         
-        if(timeController()>930 && timeController() < 1130){
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
+    //     if(timeController()>930 && timeController() < 1130){
+    //         return false;
+    //     }
+    //     else{
+    //         return true;
+    //     }
+    // }
 }
 
 function linedash(x1, y1, x2, y2, delta, style = '-') {
@@ -126,12 +164,4 @@ function linedash(x1, y1, x2, y2, delta, style = '-') {
     }
   }
 
-  function timeController(){
-    var timer = frameCount;
-    if(timer< 1130){
-      return timer;
-    }
-    if(timer >= 1130){
-      return (timer -1130 * i);
-    }
-  }
+  
