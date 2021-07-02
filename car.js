@@ -1,13 +1,17 @@
-function addCar(direction, turn) {
-    // this.x = x;
-    // this.y = y;
-    this.direction = direction;
-    this.turn = turn;
-    this.pos = createVector(0, 0);
-    this.heading = 0;
-    this.velocity = createVector(0, 0);
-    this.acceleration = createVector(0, 0);
-    switch (this.direction) {
+class addCar {
+
+    constructor( direction, turn){
+        this.direction = direction;
+        //console.log(this.direction);
+        this.turn = turn;
+        this.pos = createVector(0, 0);
+        this.heading = 0;
+        this.velocity = createVector(0, 0);
+        this.acceleration = createVector(0, 0);
+        this.maxforce = 0.02;
+        this.maxspeed = 1;
+
+        switch (this.direction) {
         case "down":
             this.velocity.x = 0.0;
             this.velocity.y = 1.0;
@@ -34,9 +38,42 @@ function addCar(direction, turn) {
             this.pos.y = 325;
             //this.heading = -PI / 2;
             break;
+    }}
+
+    applyForce(force){
+        this.acceleration.add(force);
     }
 
-    this.update = function (ppos) {
+    queue (cars){
+        this.cars =cars;
+        this.desiredseperation = 20;
+        this.sum = createVector(0,0);
+        this.count = 0;
+        for(var i = this.cars.length - 1; i >= 0; i--){
+            this.d = this.pos.dist(this.cars[i].pos);
+            if((this.d>0) && (this.d < this.desiredseperation)){
+                this.diff = this.pos.sub(this.cars[i].pos);
+                this.diff.normalize();
+                this.diff.div(this.d);
+                this.sum.add(this.diff);
+                this.count++;
+            }
+        }
+        if(this.count > 0){
+            console.log(this.count);
+            //this.sum.setMag(this.maxspeed);
+            this.steer = this.sum.sub(this.velocity);
+            this.steer.limit(this.maxforce);
+            console.log(this.steer);
+            this.applyForce(this.steer);
+            
+        }
+
+
+
+    }
+
+    update (ppos) {
         // this.red = red;
         this.ppos = ppos;
         if(this.direction == 'up'){
@@ -58,16 +95,7 @@ function addCar(direction, turn) {
             }
         }
         if(this.direction == 'down'){
-            // if(this.pos.y < 245 && this.red == true){
-            //     if(this.velocity.y > 0){
-            //         this.velocity.y = this.velocity.y - this.velocity.y/(250 - this.pos.y);
-            //     }else{
-            //         this.velocity.y = 0;
-            //     }
-            // }
-            // if(this.pos.y < 245 && this.red == false){
-            //     this.velocity.y = 1;
-            // }
+           
             switch (this.turn) {
                 case null:
                     break;
@@ -129,12 +157,13 @@ function addCar(direction, turn) {
         this.velocity.limit(1, 1);
         this.heading = -atan2(this.velocity.x, this.velocity.y);
         //console.log(this.heading);
+        this.acceleration.mult(0);
     }
 
-    this.display = function () {
+    display(){
         push();
         angleMode(RADIANS)
-        translate(this.pos.x, this.pos.y);
+        translate(this.pos.x, this.pos.y);       
         rotate(this.heading);
         fill('red');
         rectMode(CENTER);

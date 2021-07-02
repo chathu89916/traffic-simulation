@@ -30,7 +30,7 @@ function junction(){
       downLight = true;
   upLight = true;
   leftLight = true;
-  rightLight = false;
+  rightLight = false ;
 
     }
     this.lightDown = function(){
