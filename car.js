@@ -46,11 +46,11 @@ class addCar {
 
     queue (cars){
         this.cars =cars;
-        this.desiredseperation = 20;
+        this.desiredseperation = 30;
         this.sum = createVector(0,0);
         this.count = 0;
         for(var i = this.cars.length - 1; i >= 0; i--){
-            this.d = this.pos.dist(this.cars[i].pos);
+            this.d = this.pos.dist(this.cars[cars.length-1].pos);
             if((this.d>0) && (this.d < this.desiredseperation)){
                 this.diff = this.pos.sub(this.cars[i].pos);
                 this.diff.normalize();
@@ -60,8 +60,8 @@ class addCar {
             }
         }
         if(this.count > 0){
-            console.log(this.count);
-            //this.sum.setMag(this.maxspeed);
+            console.log(this.sum);
+            this.sum.setMag(this.maxspeed);
             this.steer = this.sum.sub(this.velocity);
             this.steer.limit(this.maxforce);
             console.log(this.steer);
@@ -69,12 +69,9 @@ class addCar {
             
         }
 
-
-
     }
 
-    update (ppos) {
-        // this.red = red;
+    turning(ppos){
         this.ppos = ppos;
         if(this.direction == 'up'){
             switch (this.turn) {
@@ -151,6 +148,11 @@ class addCar {
                     break;
             }
         }
+    }
+
+    update () {
+        // this.red = red;
+        
 
         this.pos.add(this.velocity);
         this.velocity.add(this.acceleration);

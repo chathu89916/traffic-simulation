@@ -36,8 +36,9 @@ function draw() {
   for (var i = Cars.length - 1; i >= 0; i--) {
     Cars[i].display();
     
-    Cars[i].update(Cars[Cars.length-1].pos);
-    Cars[i].queue(Cars);
+    Cars[i].update();
+    //Cars[i].queue(Cars);
+    Cars[i].turning(Cars[Cars.length-1].pos);
     
     if (abs(initialPos.dist(Cars[Cars.length - 1].pos)) < random(width/2 - 300, width/2-25) && Cars.length < numberofCars) {
       //console.log(i, initialPos.dist(Cars[i].pos), 'car added');
