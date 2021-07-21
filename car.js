@@ -2,7 +2,8 @@ class addCar {
 
     constructor( direction, turn){
         this.direction = direction;
-        //console.log(this.direction);
+        this.arrival = false;
+
         this.turn = turn;
         this.pos = createVector(0, 0);
         this.heading = 0;
@@ -64,7 +65,7 @@ class addCar {
                     this.path = this.leftUp;
                 break;
             }
-            //this.heading = PI / 2;
+
             break;
         case "right":
             this.velocity.x = 1.0;
@@ -79,7 +80,7 @@ class addCar {
                     this.path = this.rightUp;
                 break;
             }
-            //this.heading = -PI / 2;
+
             break;
     }}
 
@@ -94,29 +95,30 @@ class addCar {
                 this.currentNode = this.path.length-1;
             }
         }
-        //console.log(this.currentNode);
         if(this.target != null){
-            this.seek(this.target);
+            this.seek(this.target, this.arrival);
         }
     }
 
-    seek(target){
-        this.target = target;
-        //console.log(this.target);
-        this.desired = this.target.sub(this.pos);
-        this.desired.normalize();
-        this.desired.mult(this.maxspeed);
-        this.steer = this.desired.sub(this.velocity);
-        this.steer.limit(this.maxforce);
-        this.applyForce(this.steer);
-    }
 
-    // distance(a, b){
-    //     this.a =a.copy();
-    //     this.b = b.copy();
-    //     //console.log(this.a.x, this.b.x);
-    //     return Math.sqrt((this.a.x - this.b.x)*(this.a.x - this.b.x) + (this.a.y - this.b.y)*(this.a.y - this.b.y));
-    // }
+    seek(target, arrival = false) {
+        let force = p5.Vector.sub(target, this.pos);
+        let desiredSpeed = this.maxspeed;
+        if (arrival) {
+          let slowRadius = 100;
+          let distance = force.mag();
+          if (distance < slowRadius) {
+            desiredSpeed = map(distance, 0, slowRadius, 0, this.maxspeed);
+          }
+        }
+        force.setMag(desiredSpeed);
+        force.sub(this.velocity);
+        force.limit(this.maxforce);
+        this.applyForce(force);
+      }
+
+
+
 
     applyForce(force){
         this.acceleration.add(force);
@@ -141,103 +143,87 @@ class addCar {
             }
         }
         if(this.count > 0){
-            //console.log(this.sum);
+
             this.sum.div(this.count);
             this.sum.normalize();
             this.sum.mult(this.maxspeed);
-            console.log(this.sum);
+
             this.sum.sub(this.velocity);
             this.sum.limit(this.maxforce)  
-           // console.log(this.steer);
-            //this.applyForce(this.steer);
+
             this.applyForce(this.sum);
         }
 
 
     }
 
-    turning(ppos){
-        this.ppos = ppos;
-        if(this.direction == 'up'){
-            switch (this.turn) {
-                case null:
-                    break;
-                case "left":
-                    if (this.pos.y < 350) {
-                        this.acceleration.x = 0.02;
-                        this.acceleration.y = 0;
-                    }
-                    break;
-                case "right":
-                    if (this.pos.y < 350) {
-                        this.acceleration.x = -0.055;
-                        this.acceleration.y = 0;
-                    }
-                    break;
-            }
+    lightCheck(green){
+        this.green = green;
+        if(this.green !== 'right' && this.direction == 'right' && this.currentNode == 1){
+            this.path = [createVector(0,275),createVector(240,275)];
+            this.arrival = true;
         }
-        if(this.direction == 'down'){
-           
-            switch (this.turn) {
-                case null:
-                    break;
-                case "left":
-                    if (this.pos.y >= 250) {
-                        this.acceleration.x = 0.055;
-                        this.acceleration.y = 0;
-                    }
-                    break;
-                case "right":
-                    if (this.pos.y >= 250) {
-                        this.acceleration.x = -0.02;
-                        this.acceleration.y = 0;
-                    }
-                    break;
-            }
+        if(this.green !== 'left' && this.direction == 'left' && this.currentNode == 1){
+            this.path = [createVector(600,325),createVector(350,325)];  
+            this.arrival = true;
+        } 
+        if(this.green !== 'up' && this.direction == 'up' && this.currentNode == 1){
+            this.path = [createVector(275,600),createVector(275,350)];
+            this.arrival = true;
+        } 
+        if(this.green !== 'down' && this.direction == 'down' && this.currentNode == 1){
+            this.path = [createVector(325,0), createVector(325,250)];
+            this.arrival = true;
         }
-        
-        if(this.direction == 'left'){
-            switch (this.turn) {
-                case null:
-                    break;
+        if(this.green == 'right' && this.direction == 'right' && this.currentNode == 1){
+            switch (this.turn){
                 case "left":
-                    if (this.pos.x > 250) {
-                        this.acceleration.x = 0.00;
-                        this.acceleration.y = 0.02;
-                    }
+                    this.path = this.rightDown;
                     break;
                 case "right":
-                    if (this.pos.x > 250) {
-                        this.acceleration.x = 0.0;
-                        this.acceleration.y = -0.055;
-                    }
-                    break;
+                    this.path = this.rightUp;
+                break;
             }
+            this.arrival = false;
+        }
+        if(this.green == 'left' && this.direction == 'left' && this.currentNode == 1){
+            switch (this.turn){
+                case "left":
+                    this.path = this.leftDown;
+                    break;
+                case "right":
+                    this.path = this.leftUp;
+                break;
+            } 
+            this.arrival = false;
+        } 
+        if(this.green == 'up' && this.direction == 'up' && this.currentNode == 1){
+            switch (this.turn){
+                case "left":
+                    this.path = this.upLeft;
+                    break;
+                case "right":
+                    this.path = this.upRight;
+                break;
+            }
+            this.arrival = false;
+        } 
+        if(this.green == 'down' && this.direction == 'down' && this.currentNode == 1){
+            switch (this.turn){
+                case "left":
+                    this.path = this.downLeft;
+                    break;
+                case "right":
+                    this.path = this.downRight;
+                break;
+            }
+            this.arrival = false;
         }
 
-        if(this.direction == 'right'){
-            switch (this.turn) {
-                case null:
-                    break;
-                case "left":
-                    if (this.pos.x < 350) {
-                        this.acceleration.x = 0.00;
-                        this.acceleration.y = 0.055;
-                    }
-                    break;
-                case "right":
-                    if (this.pos.x < 350) {
-                        this.acceleration.x = 0.0;
-                        this.acceleration.y = -0.02;
-                    }
-                    break;
-            }
-        }
     }
 
+
     update () {
-        // this.red = red;
-        
 
         this.pos.add(this.velocity);
         this.velocity.add(this.acceleration);
