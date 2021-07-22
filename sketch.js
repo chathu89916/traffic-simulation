@@ -1,5 +1,5 @@
 Cars = [];
-var numberofCars = 10;
+var numberofCars = 20;
 //var carCount = 0;
 let direction = ['down','up','left','right'];
 let turnDirection = ['left','right'];
@@ -41,13 +41,12 @@ function draw() {
   for (var i = Cars.length - 1; i >= 0; i--) {
     Cars[i].display();
     Cars[i].follow();
-    //Cars[i].queueing(Cars);
+    Cars[i].lightCheck(lightDirection, Cars);
     Cars[i].update();
-    Cars[i].lightCheck(lightDirection);
     
     //Cars[i].turning(Cars[Cars.length-1].pos);
     
-    if (abs(initialPos.dist(Cars[Cars.length - 1].pos)) < random(width/2 - 300, width/2-25) && Cars.length < numberofCars) {
+    if (Math.abs(initialPos.dist(Cars[Cars.length - 1].pos)) < random(width/2 - 300, width/2-50) && Cars.length < numberofCars) {
       //console.log(i, initialPos.dist(Cars[i].pos), 'car added');
       Cars.push(new addCar(random(direction),random(turnDirection)));
     }

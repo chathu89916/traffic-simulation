@@ -88,7 +88,7 @@ class addCar {
         
         this.target  = this.path[this.currentNode].copy();
         //console.log(this.distance(this.pos, this.target));
-        if(this.pos.dist(this.target) <= 10){
+        if(this.pos.dist(this.target) <= 15){
            // if(this.distance(this.pos, this.target) <= 10){
             this.currentNode +=1;
             if(this.currentNode >= this.path.length){
@@ -157,22 +157,77 @@ class addCar {
 
     }
 
-    lightCheck(green){
+    lightCheck(green,Cars){
         this.green = green;
+
+
         if(this.green !== 'right' && this.direction == 'right' && this.currentNode == 1){
-            this.path = [createVector(0,275),createVector(240,275)];
+            this.path = [createVector(0,275),createVector(225,275)];
+            let dx = 500;
+            let dy = 500;
+            let carNumber = 0;
+            for(var i = Cars.length-1; i >= 0 ; i--){
+                if(Cars[i].pos.x-this.pos.x > 6 && Cars[i].pos.x-this.pos.x < dx && Math.abs(this.pos.y-Cars[i].pos.y) < 20){
+                    dx = Cars[i].pos.x-this.pos.x;
+                    dy = Math.abs(this.pos.y-Cars[i].pos.y);
+                    carNumber = i;
+                }
+            }
+            if((this.path[1].x - this.pos.x) > dx){
+                this.path = [createVector(0,275),createVector(Cars[carNumber].pos.x-25,Cars[carNumber].pos.y)];
+            }
+
             this.arrival = true;
         }
         if(this.green !== 'left' && this.direction == 'left' && this.currentNode == 1){
-            this.path = [createVector(600,325),createVector(350,325)];  
+            this.path = [createVector(600,325),createVector(375,325)];  
+            let dx = 500;
+            let dy = 500;
+            let carNumber = 0;
+            for(var i = Cars.length-1; i >= 0 ; i--){
+                if(this.pos.x - Cars[i].pos.x > 6 && this.pos.x - Cars[i].pos.x  < dx && Math.abs(this.pos.y-Cars[i].pos.y) < 20){
+                    dx = this.pos.x - Cars[i].pos.x;
+                    dy = Math.abs(this.pos.y-Cars[i].pos.y);
+                    carNumber = i;
+                }
+            }
+            if((this.pos.x -this.path[1].x) > dx){
+                this.path = [createVector(0,275),createVector(Cars[carNumber].pos.x+25,Cars[carNumber].pos.y)];
+            }
             this.arrival = true;
         } 
         if(this.green !== 'up' && this.direction == 'up' && this.currentNode == 1){
-            this.path = [createVector(275,600),createVector(275,350)];
+            this.path = [createVector(275,600),createVector(275,375)];
+            let dx = 500;
+            let dy = 500;
+            let carNumber = 0;
+            for(var i = Cars.length-1; i >= 0 ; i--){
+                if(this.pos.y - Cars[i].pos.y > 6 && this.pos.y - Cars[i].pos.y  < dy && Math.abs(this.pos.x-Cars[i].pos.x) < 20){
+                    dy = this.pos.y - Cars[i].pos.y;
+                    dx = Math.abs(this.pos.x-Cars[i].pos.x);
+                    carNumber = i;
+                }
+            }
+            if((this.pos.y -this.path[1].y) > dy){
+                this.path = [createVector(0,275),createVector(Cars[carNumber].pos.x,Cars[carNumber].pos.y+25)];
+            }
             this.arrival = true;
         } 
         if(this.green !== 'down' && this.direction == 'down' && this.currentNode == 1){
-            this.path = [createVector(325,0), createVector(325,250)];
+            this.path = [createVector(325,0), createVector(325,225)];
+            let dx = 500;
+            let dy = 500;
+            let carNumber = 0;
+            for(var i = Cars.length-1; i >= 0 ; i--){
+                if(Cars[i].pos.y - this.pos.y   > 6 && Cars[i].pos.y - this.pos.y  < dy && Math.abs(this.pos.x-Cars[i].pos.x) < 20){
+                    dy = Cars[i].pos.y - this.pos.y;
+                    dx = Math.abs(this.pos.x-Cars[i].pos.x);
+                    carNumber = i;
+                }
+            }
+            if((this.path[1].y -this.pos.y) > dy){
+                this.path = [createVector(0,275),createVector(Cars[carNumber].pos.x,Cars[carNumber].pos.y-25)];
+            }
             this.arrival = true;
         }
         if(this.green == 'right' && this.direction == 'right' && this.currentNode == 1){
@@ -229,7 +284,6 @@ class addCar {
         this.velocity.add(this.acceleration);
         this.velocity.limit(1, 1);
         this.heading = -atan2(this.velocity.x, this.velocity.y);
-        //console.log(this.heading);
         this.acceleration.mult(0);
     }
 
