@@ -125,7 +125,6 @@ class addCar {
     }
 
     queueing (cars){
-
         this.cars =cars;
         this.desiredseperation = 30;
         this.sum = createVector(0,0);
@@ -143,23 +142,55 @@ class addCar {
             }
         }
         if(this.count > 0){
-
             this.sum.div(this.count);
             this.sum.normalize();
             this.sum.mult(this.maxspeed);
-
             this.sum.sub(this.velocity);
             this.sum.limit(this.maxforce)  
-
             this.applyForce(this.sum);
         }
 
 
     }
 
+    hit(Cars){
+        for(var i = Cars.length-1; i >= 0 ; i--){
+            if(Math.abs(Cars[i].pos.dist(createVector(width/2, height/2)) < 50 && Cars[i].pos !== this.pos )){
+                let hitD = Cars[i].pos.dist(this.pos);
+                if(hitD<20){
+                    console.log('HIT');
+                }
+            }
+        }
+    }
+
+    queuCars(Cars){
+        let Lcount = 0;
+        let Rcount = 0;
+        let Ucount = 0;
+        let Dcount = 0;
+        
+        for(var i = Cars.length-1; i >= 0 ; i--){
+            if(Math.abs(Cars[i].pos.y - 275)< 20 && (225 - Cars[i].pos.x) < 200){
+                Lcount++
+            }
+            if(Math.abs(Cars[i].pos.y - 325)< 20 && (Cars[i].pos.x - 375) < 200){
+                Rcount++
+            }
+            if(Math.abs(Cars[i].pos.x - 275)< 20 && (Cars[i].pos.y - 375) < 200){
+                Dcount++
+            }
+            if(Math.abs(Cars[i].pos.x - 325)< 20 && (225- Cars[i].pos.y) < 200){
+                Ucount++
+            }
+
+        }
+        let qCount = [Lcount,Rcount,Ucount,Dcount];
+        console.log(qCount);
+    }
+
     lightCheck(green,Cars){
         this.green = green;
-
 
         if(this.green !== 'right' && this.direction == 'right' && this.currentNode == 1){
             this.path = [createVector(0,275),createVector(225,275)];

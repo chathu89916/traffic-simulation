@@ -42,6 +42,9 @@ function draw() {
     Cars[i].display();
     Cars[i].follow();
     Cars[i].lightCheck(lightDirection, Cars);
+    //Cars[i].hit(Cars);
+    setInterval(Cars[i].queuCars(Cars), 1000);
+    //Cars[i].queuCars(Cars);
     Cars[i].update();
     
     //Cars[i].turning(Cars[Cars.length-1].pos);
