@@ -2,7 +2,8 @@ class addCar {
 
     constructor( direction, turn){
         this.direction = direction;
-        //console.log(this.direction);
+        this.arrival = false;
+
         this.turn = turn;
         this.pos = createVector(0, 0);
         this.heading = 0;
@@ -64,7 +65,7 @@ class addCar {
                     this.path = this.leftUp;
                 break;
             }
-            //this.heading = PI / 2;
+
             break;
         case "right":
             this.velocity.x = 1.0;
@@ -79,7 +80,7 @@ class addCar {
                     this.path = this.rightUp;
                 break;
             }
-            //this.heading = -PI / 2;
+
             break;
     }}
 
@@ -87,36 +88,37 @@ class addCar {
         
         this.target  = this.path[this.currentNode].copy();
         //console.log(this.distance(this.pos, this.target));
-        if(this.pos.dist(this.target) <= 10){
+        if(this.pos.dist(this.target) <= 15){
            // if(this.distance(this.pos, this.target) <= 10){
             this.currentNode +=1;
             if(this.currentNode >= this.path.length){
                 this.currentNode = this.path.length-1;
             }
         }
-        //console.log(this.currentNode);
         if(this.target != null){
-            this.seek(this.target);
+            this.seek(this.target, this.arrival);
         }
     }
 
-    seek(target){
-        this.target = target;
-        //console.log(this.target);
-        this.desired = this.target.sub(this.pos);
-        this.desired.normalize();
-        this.desired.mult(this.maxspeed);
-        this.steer = this.desired.sub(this.velocity);
-        this.steer.limit(this.maxforce);
-        this.applyForce(this.steer);
-    }
 
-    // distance(a, b){
-    //     this.a =a.copy();
-    //     this.b = b.copy();
-    //     //console.log(this.a.x, this.b.x);
-    //     return Math.sqrt((this.a.x - this.b.x)*(this.a.x - this.b.x) + (this.a.y - this.b.y)*(this.a.y - this.b.y));
-    // }
+    seek(target, arrival = false) {
+        let force = p5.Vector.sub(target, this.pos);
+        let desiredSpeed = this.maxspeed;
+        if (arrival) {
+          let slowRadius = 100;
+          let distance = force.mag();
+          if (distance < slowRadius) {
+            desiredSpeed = map(distance, 0, slowRadius, 0, this.maxspeed);
+          }
+        }
+        force.setMag(desiredSpeed);
+        force.sub(this.velocity);
+        force.limit(this.maxforce);
+        this.applyForce(force);
+      }
+
+
+
 
     applyForce(force){
         this.acceleration.add(force);
@@ -141,7 +143,6 @@ class addCar {
     // }
 
     queueing (cars){
-
         this.cars =cars;
         this.desiredseperation = 30;
         this.sum = createVector(0,0);
@@ -159,109 +160,179 @@ class addCar {
             }
         }
         if(this.count > 0){
-            //console.log(this.sum);
             this.sum.div(this.count);
             this.sum.normalize();
             this.sum.mult(this.maxspeed);
-           // console.log(this.sum);
             this.sum.sub(this.velocity);
             this.sum.limit(this.maxforce)  
-           // console.log(this.steer);
-            //this.applyForce(this.steer);
             this.applyForce(this.sum);
         }
 
 
     }
 
-    turning(ppos){
-        this.ppos = ppos;
-        if(this.direction == 'up'){
-            switch (this.turn) {
-                case null:
-                    break;
-                case "left":
-                    if (this.pos.y < 350) {
-                        this.acceleration.x = 0.02;
-                        this.acceleration.y = 0;
-                    }
-                    break;
-                case "right":
-                    if (this.pos.y < 350) {
-                        this.acceleration.x = -0.055;
-                        this.acceleration.y = 0;
-                    }
-                    break;
-            }
-        }
-        if(this.direction == 'down'){
-           
-            switch (this.turn) {
-                case null:
-                    break;
-                case "left":
-                    if (this.pos.y >= 250) {
-                        this.acceleration.x = 0.055;
-                        this.acceleration.y = 0;
-                    }
-                    break;
-                case "right":
-                    if (this.pos.y >= 250) {
-                        this.acceleration.x = -0.02;
-                        this.acceleration.y = 0;
-                    }
-                    break;
-            }
-        }
-        
-        if(this.direction == 'left'){
-            switch (this.turn) {
-                case null:
-                    break;
-                case "left":
-                    if (this.pos.x > 250) {
-                        this.acceleration.x = 0.00;
-                        this.acceleration.y = 0.02;
-                    }
-                    break;
-                case "right":
-                    if (this.pos.x > 250) {
-                        this.acceleration.x = 0.0;
-                        this.acceleration.y = -0.055;
-                    }
-                    break;
-            }
-        }
-
-        if(this.direction == 'right'){
-            switch (this.turn) {
-                case null:
-                    break;
-                case "left":
-                    if (this.pos.x < 350) {
-                        this.acceleration.x = 0.00;
-                        this.acceleration.y = 0.055;
-                    }
-                    break;
-                case "right":
-                    if (this.pos.x < 350) {
-                        this.acceleration.x = 0.0;
-                        this.acceleration.y = -0.02;
-                    }
-                    break;
+    hit(Cars){
+        for(var i = Cars.length-1; i >= 0 ; i--){
+            if(Math.abs(Cars[i].pos.dist(createVector(width/2, height/2)) < 50 && Cars[i].pos !== this.pos )){
+                let hitD = Cars[i].pos.dist(this.pos);
+                if(hitD<20){
+                    console.log('HIT');
+                }
             }
         }
     }
 
-    update () {
-        // this.red = red;
+    queuCars(Cars){
+        let Lcount = 0;
+        let Rcount = 0;
+        let Ucount = 0;
+        let Dcount = 0;
         
+        for(var i = Cars.length-1; i >= 0 ; i--){
+            if(Math.abs(Cars[i].pos.y - 275)< 20 && (225 - Cars[i].pos.x) < 200){
+                Lcount++
+            }
+            if(Math.abs(Cars[i].pos.y - 325)< 20 && (Cars[i].pos.x - 375) < 200){
+                Rcount++
+            }
+            if(Math.abs(Cars[i].pos.x - 275)< 20 && (Cars[i].pos.y - 375) < 200){
+                Dcount++
+            }
+            if(Math.abs(Cars[i].pos.x - 325)< 20 && (225- Cars[i].pos.y) < 200){
+                Ucount++
+            }
+
+        }
+        let qCount = [Lcount,Rcount,Ucount,Dcount];
+        console.log(qCount);
+    }
+
+    lightCheck(green,Cars){
+        this.green = green;
+
+        if(this.green !== 'right' && this.direction == 'right' && this.currentNode == 1){
+            this.path = [createVector(0,275),createVector(225,275)];
+            let dx = 500;
+            let dy = 500;
+            let carNumber = 0;
+            for(var i = Cars.length-1; i >= 0 ; i--){
+                if(Cars[i].pos.x-this.pos.x > 6 && Cars[i].pos.x-this.pos.x < dx && Math.abs(this.pos.y-Cars[i].pos.y) < 20){
+                    dx = Cars[i].pos.x-this.pos.x;
+                    dy = Math.abs(this.pos.y-Cars[i].pos.y);
+                    carNumber = i;
+                }
+            }
+            if((this.path[1].x - this.pos.x) > dx){
+                this.path = [createVector(0,275),createVector(Cars[carNumber].pos.x-25,Cars[carNumber].pos.y)];
+            }
+
+            this.arrival = true;
+        }
+        if(this.green !== 'left' && this.direction == 'left' && this.currentNode == 1){
+            this.path = [createVector(600,325),createVector(375,325)];  
+            let dx = 500;
+            let dy = 500;
+            let carNumber = 0;
+            for(var i = Cars.length-1; i >= 0 ; i--){
+                if(this.pos.x - Cars[i].pos.x > 6 && this.pos.x - Cars[i].pos.x  < dx && Math.abs(this.pos.y-Cars[i].pos.y) < 20){
+                    dx = this.pos.x - Cars[i].pos.x;
+                    dy = Math.abs(this.pos.y-Cars[i].pos.y);
+                    carNumber = i;
+                }
+            }
+            if((this.pos.x -this.path[1].x) > dx){
+                this.path = [createVector(0,275),createVector(Cars[carNumber].pos.x+25,Cars[carNumber].pos.y)];
+            }
+            this.arrival = true;
+        } 
+        if(this.green !== 'up' && this.direction == 'up' && this.currentNode == 1){
+            this.path = [createVector(275,600),createVector(275,375)];
+            let dx = 500;
+            let dy = 500;
+            let carNumber = 0;
+            for(var i = Cars.length-1; i >= 0 ; i--){
+                if(this.pos.y - Cars[i].pos.y > 6 && this.pos.y - Cars[i].pos.y  < dy && Math.abs(this.pos.x-Cars[i].pos.x) < 20){
+                    dy = this.pos.y - Cars[i].pos.y;
+                    dx = Math.abs(this.pos.x-Cars[i].pos.x);
+                    carNumber = i;
+                }
+            }
+            if((this.pos.y -this.path[1].y) > dy){
+                this.path = [createVector(0,275),createVector(Cars[carNumber].pos.x,Cars[carNumber].pos.y+25)];
+            }
+            this.arrival = true;
+        } 
+        if(this.green !== 'down' && this.direction == 'down' && this.currentNode == 1){
+            this.path = [createVector(325,0), createVector(325,225)];
+            let dx = 500;
+            let dy = 500;
+            let carNumber = 0;
+            for(var i = Cars.length-1; i >= 0 ; i--){
+                if(Cars[i].pos.y - this.pos.y   > 6 && Cars[i].pos.y - this.pos.y  < dy && Math.abs(this.pos.x-Cars[i].pos.x) < 20){
+                    dy = Cars[i].pos.y - this.pos.y;
+                    dx = Math.abs(this.pos.x-Cars[i].pos.x);
+                    carNumber = i;
+                }
+            }
+            if((this.path[1].y -this.pos.y) > dy){
+                this.path = [createVector(0,275),createVector(Cars[carNumber].pos.x,Cars[carNumber].pos.y-25)];
+            }
+            this.arrival = true;
+        }
+        if(this.green == 'right' && this.direction == 'right' && this.currentNode == 1){
+            switch (this.turn){
+                case "left":
+                    this.path = this.rightDown;
+                    break;
+                case "right":
+                    this.path = this.rightUp;
+                break;
+            }
+            this.arrival = false;
+        }
+        if(this.green == 'left' && this.direction == 'left' && this.currentNode == 1){
+            switch (this.turn){
+                case "left":
+                    this.path = this.leftDown;
+                    break;
+                case "right":
+                    this.path = this.leftUp;
+                break;
+            } 
+            this.arrival = false;
+        } 
+        if(this.green == 'up' && this.direction == 'up' && this.currentNode == 1){
+            switch (this.turn){
+                case "left":
+                    this.path = this.upLeft;
+                    break;
+                case "right":
+                    this.path = this.upRight;
+                break;
+            }
+            this.arrival = false;
+        } 
+        if(this.green == 'down' && this.direction == 'down' && this.currentNode == 1){
+            switch (this.turn){
+                case "left":
+                    this.path = this.downLeft;
+                    break;
+                case "right":
+                    this.path = this.downRight;
+                break;
+            }
+            this.arrival = false;
+        }
+
+    }
+
+
+    update () {
 
         this.pos.add(this.velocity);
         this.velocity.add(this.acceleration);
         this.velocity.limit(1, 1);
         this.heading = -atan2(this.velocity.x, this.velocity.y);
-        //console.log(this.heading);
         this.acceleration.mult(0);
     }
 

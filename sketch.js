@@ -1,9 +1,9 @@
 Cars = [];
-var numberofCars = 10;
+var numberofCars = 20;
 //var carCount = 0;
-let direction = ['down','up','left','right']
-let turnDirection = ['left','right']
-let signal;
+let direction = ['down','up','left','right'];
+let turnDirection = ['left','right'];
+let lightDirection;
 
 function setup() {
   // put setup code here
@@ -15,10 +15,14 @@ function setup() {
   //console.log(initialPos);
   Cars.push(new addCar(random(direction),random(turnDirection)));
   TrafficLights = new junction();
-  setInterval(TrafficLights.counter1,5000);
-  setInterval(TrafficLights.counter2,10000);
-  setInterval(TrafficLights.counter3,15000);
-  setInterval(TrafficLights.counter4,20000);
+  setInterval(function(){TrafficLights.counter1();
+  lightDirection = 'down';},5000);
+  setInterval(function(){TrafficLights.counter2();
+  lightDirection = 'up';},10000);
+  setInterval(function(){TrafficLights.counter3();
+  lightDirection = 'right';},15000);
+  setInterval(function(){TrafficLights.counter4();
+  lightDirection = 'left';},20000);
 }
 
 function draw() {
@@ -37,13 +41,16 @@ function draw() {
   for (var i = Cars.length - 1; i >= 0; i--) {
     Cars[i].display();
     Cars[i].follow();
-    Cars[i].queueing(Cars);
+    Cars[i].lightCheck(lightDirection, Cars);
+    //Cars[i].hit(Cars);
+    setInterval(Cars[i].queuCars(Cars), 1000);
+    //Cars[i].queuCars(Cars);
     Cars[i].update();
     //Cars[i].signalcheck(signal);
     
     //Cars[i].turning(Cars[Cars.length-1].pos);
     
-    if (abs(initialPos.dist(Cars[Cars.length - 1].pos)) < random(width/2 - 300, width/2-25) && Cars.length < numberofCars) {
+    if (Math.abs(initialPos.dist(Cars[Cars.length - 1].pos)) < random(width/2 - 300, width/2-50) && Cars.length < numberofCars) {
       //console.log(i, initialPos.dist(Cars[i].pos), 'car added');
       Cars.push(new addCar(random(direction),random(turnDirection)));
     }
