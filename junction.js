@@ -24,7 +24,7 @@ function junction(){
   upLight = true;
   leftLight = false;
   rightLight = true;
-
+ signal = 'left';
     }
     this.counter4 = function(){
       downLight = true;

@@ -3,6 +3,7 @@ var numberofCars = 10;
 //var carCount = 0;
 let direction = ['down','up','left','right']
 let turnDirection = ['left','right']
+let signal;
 
 function setup() {
   // put setup code here
@@ -38,6 +39,7 @@ function draw() {
     Cars[i].follow();
     Cars[i].queueing(Cars);
     Cars[i].update();
+    //Cars[i].signalcheck(signal);
     
     //Cars[i].turning(Cars[Cars.length-1].pos);
     

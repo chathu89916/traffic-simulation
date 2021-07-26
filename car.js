@@ -122,6 +122,24 @@ class addCar {
         this.acceleration.add(force);
     }
 
+    // signalcheck (red){
+    //     this.red =red;
+    //     if(this.red == 'left'){
+    //         if(this.direction == 'left'&& this.currentNode == 1){
+    //             let carV = createVector(0,0);
+    //             // let m = createVector(275,350);
+    //             // carV = m.sub(this.pos);
+    //             // carV.mult(-1);
+    //             // carV.normalize();
+    //             //carV.limit(this.maxforce);
+    //             //this.applyForce(carV);
+    //             let d = map[carV , createVector(0,0), this.maxforce, this.pos, createVector(275,350)];
+    //             console.log(d);
+    //         }
+
+    //     }
+    // }
+
     queueing (cars){
 
         this.cars =cars;
@@ -134,7 +152,7 @@ class addCar {
             if((this.d>0) && (this.d < this.desiredseperation)){
                 this.diff = this.pos.copy();
                 this.diff = this.diff.sub(this.cars[i].pos);
-                this.diff.normalize();
+                this.diff.normalize(); 
                 this.diff.div(this.d);
                 this.sum.add(this.diff);
                 this.count++;
@@ -145,7 +163,7 @@ class addCar {
             this.sum.div(this.count);
             this.sum.normalize();
             this.sum.mult(this.maxspeed);
-            console.log(this.sum);
+           // console.log(this.sum);
             this.sum.sub(this.velocity);
             this.sum.limit(this.maxforce)  
            // console.log(this.steer);
