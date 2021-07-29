@@ -19,8 +19,8 @@ class junction {
     this.brain.dispose();
   }
 
-  mutate() {
-    this.brain.mutate(0.1);
+  mutate(a) {
+    this.brain.mutate(a);
   }
 
   think(qLength) {

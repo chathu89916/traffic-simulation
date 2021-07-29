@@ -17,6 +17,7 @@ function setup() {
   noStroke();
   //Cars.push(new addCar(random(direction), random(turnDirection)));
   TrafficLight = new junction();
+  console.log("start");
   // setInterval(function () {
   //   TrafficLight.counter1();
   //   //lightDirection = "down";
@@ -68,7 +69,7 @@ function draw() {
   }
   frameCount++;
   //console.log(carLeave);
-  if (frameCount >= 2500) {
+  if (frameCount >= 2000) {
     nextGeneration();
     frameCount = 0;
     carLeave = 0;
