@@ -9,6 +9,13 @@ let TrafficLight;
 let saveTrafficLight;
 let carCount = [];
 
+function keyPressed() {
+  if (key === "S") {
+    let best = saveTrafficLight;
+    saveJSON(best.brain, "best.json");
+  }
+}
+
 function setup() {
   // put setup code here
   createCanvas(600, 600);
@@ -17,6 +24,7 @@ function setup() {
   noStroke();
   //Cars.push(new addCar(random(direction), random(turnDirection)));
   TrafficLight = new junction();
+  slider = createSlider(1, 10, 1);
   console.log("start");
   // setInterval(function () {
   //   TrafficLight.counter1();
@@ -38,42 +46,48 @@ function setup() {
 
 function draw() {
   // put drawing code here
-  background(225);
-  TrafficLight.roadOverlay();
-  setInterval(function () {
-    carCount = queuCars(Cars);
-  }, 50);
-  TrafficLight.think(carCount);
-  TrafficLight.show();
-  if (Cars.length == 0) {
-    Cars.push(new addCar(random(direction), random(turnDirection)));
-  }
 
-  for (var i = Cars.length - 1; i >= 0; i--) {
-    Cars[i].display();
-    Cars[i].follow();
-    Cars[i].lightCheck(lightDirection, Cars);
-    Cars[i].update();
-
-    if (
-      Math.abs(initialPos.dist(Cars[Cars.length - 1].pos)) <
-        random(width / 2 - 300, width / 2 - 50) &&
-      Cars.length < numberofCars
-    ) {
+  for (let n = 0; n < slider.value(); n++) {
+    setInterval(function () {
+      carCount = queuCars(Cars);
+    }, 5);
+    TrafficLight.think(carCount);
+    if (Cars.length == 0) {
       Cars.push(new addCar(random(direction), random(turnDirection)));
     }
-    if (Cars[i].pos.dist(initialPos) > 310) {
-      Cars.splice(i, 1);
-      carLeave++;
+
+    for (var i = Cars.length - 1; i >= 0; i--) {
+      Cars[i].follow();
+      Cars[i].lightCheck(lightDirection, Cars);
+      Cars[i].update();
+
+      if (
+        Math.abs(initialPos.dist(Cars[Cars.length - 1].pos)) <
+          random(width / 2 - 300, width / 2 - 50) &&
+        Cars.length < numberofCars
+      ) {
+        Cars.push(new addCar(random(direction), random(turnDirection)));
+      }
+      if (Cars[i].pos.dist(initialPos) > 310) {
+        Cars.splice(i, 1);
+        carLeave++;
+      }
+    }
+    frameCount++;
+    //console.log(carLeave);
+    if (frameCount >= 5000) {
+      nextGeneration();
+      frameCount = 0;
+      carLeave = 0;
+      Cars = [];
     }
   }
-  frameCount++;
-  //console.log(carLeave);
-  if (frameCount >= 2000) {
-    nextGeneration();
-    frameCount = 0;
-    carLeave = 0;
-    Cars = [];
+
+  background(225);
+  TrafficLight.roadOverlay();
+  TrafficLight.show();
+  for (var i = Cars.length - 1; i >= 0; i--) {
+    Cars[i].display();
   }
 }
 
