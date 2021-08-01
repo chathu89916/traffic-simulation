@@ -11,7 +11,7 @@ class junction {
     if (brain) {
       this.brain = brain.copy();
     } else {
-      this.brain = new NeuralNetwork(4, 8, 4);
+      this.brain = new NeuralNetwork(4, 12, 4);
     }
   }
 

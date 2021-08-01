@@ -8,9 +8,10 @@ function nextGeneration() {
     console.log("high fitness");
     saveTrafficLight = new junction(TrafficLight.brain);
     saveTrafficLight.fitness = TrafficLight.fitness;
-    TrafficLight.mutate(0.3);
+    TrafficLight.mutate(0.05);
   } else if (saveTrafficLight.fitness >= TrafficLight.fitness) {
-    saveTrafficLight.mutate(0.3);
+    TrafficLight.dispose();
+    saveTrafficLight.mutate(0.05);
     TrafficLight = new junction(saveTrafficLight.brain);
   }
 }

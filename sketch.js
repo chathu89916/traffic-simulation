@@ -75,7 +75,7 @@ function draw() {
     }
     frameCount++;
     //console.log(carLeave);
-    if (frameCount >= 5000) {
+    if (frameCount >= 3000) {
       nextGeneration();
       frameCount = 0;
       carLeave = 0;
