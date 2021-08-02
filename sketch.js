@@ -16,6 +16,10 @@ function keyPressed() {
   }
 }
 
+function preload() {
+  savedBrain = loadJSON("best.json");
+}
+
 function setup() {
   // put setup code here
   createCanvas(600, 600);
@@ -23,7 +27,8 @@ function setup() {
   initialPos = createVector(width / 2, height / 2);
   noStroke();
   //Cars.push(new addCar(random(direction), random(turnDirection)));
-  TrafficLight = new junction();
+
+  TrafficLight = new junction(savedBrain.brain);
   slider = createSlider(1, 10, 1);
   console.log("start");
   // setInterval(function () {
