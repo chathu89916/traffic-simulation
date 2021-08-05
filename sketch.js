@@ -8,6 +8,7 @@ let frameCount = 0;
 let TrafficLight;
 let saveTrafficLight;
 let carCount = [];
+let savedJson;
 
 function keyPressed() {
   if (key === "S") {
@@ -17,7 +18,7 @@ function keyPressed() {
 }
 
 function preload() {
-  savedBrain = loadJSON("best.json");
+  savedJson = loadJSON("best.json");
 }
 
 function setup() {
@@ -27,35 +28,19 @@ function setup() {
   initialPos = createVector(width / 2, height / 2);
   noStroke();
   //Cars.push(new addCar(random(direction), random(turnDirection)));
-
-  TrafficLight = new junction(savedBrain.brain);
-  slider = createSlider(1, 10, 1);
+  //tf.setBackend("cpu");
+  let savedBrain = NeuralNetwork.deserialize(savedJson);
+  TrafficLight = new junction(savedBrain);
+  slider = createSlider(1, 20, 1);
   console.log("start");
-  // setInterval(function () {
-  //   TrafficLight.counter1();
-  //   //lightDirection = "down";
-  // }, 5000);
-  // setInterval(function () {
-  //   TrafficLight.counter2();
-  //   //lightDirection = "up";
-  // }, 10000);
-  // setInterval(function () {
-  //   TrafficLight.counter3();
-  //   //lightDirection = "right";
-  // }, 15000);
-  // setInterval(function () {
-  //   TrafficLight.counter4();
-  //   //lightDirection = "left";
-  // }, 20000);
+  Direction = "left";
 }
 
 function draw() {
   // put drawing code here
 
   for (let n = 0; n < slider.value(); n++) {
-    setInterval(function () {
-      carCount = queuCars(Cars);
-    }, 5);
+    carCount = queuCars(Cars);
     TrafficLight.think(carCount);
     if (Cars.length == 0) {
       Cars.push(new addCar(random(direction), random(turnDirection)));
@@ -79,8 +64,7 @@ function draw() {
       }
     }
     frameCount++;
-    //console.log(carLeave);
-    if (frameCount >= 3000) {
+    if (frameCount >= 5000) {
       nextGeneration();
       frameCount = 0;
       carLeave = 0;

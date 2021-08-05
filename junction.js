@@ -1,3 +1,13 @@
+function mutate(x = 0.1) {
+  if (random(1) < 0.1) {
+    let offset = randomGaussian() * 0.5;
+    let newx = x + offset;
+    return newx;
+  } else {
+    return x;
+  }
+}
+
 class junction {
   constructor(brain) {
     this.downLight = true;
@@ -10,17 +20,18 @@ class junction {
 
     if (brain) {
       this.brain = brain.copy();
+      this.brain.mutate(mutate);
     } else {
       this.brain = new NeuralNetwork(4, 12, 4);
     }
   }
 
-  dispose() {
-    this.brain.dispose();
-  }
+  // dispose() {
+  //   this.brain.dispose();
+  // }
 
-  mutate(a) {
-    this.brain.mutate(a);
+  copy() {
+    return new junction(this.brain);
   }
 
   think(qLength) {

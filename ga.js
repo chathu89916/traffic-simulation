@@ -2,19 +2,15 @@ function nextGeneration() {
   console.log("Next Generation");
   calculateFitness();
   if (typeof saveTrafficLight == "undefined") {
-    console.log("no brain");
-    saveTrafficLight = new junction(TrafficLight.brain);
+    console.log("no save junction");
+    saveTrafficLight = TrafficLight.copy();
   } else if (saveTrafficLight.fitness < TrafficLight.fitness) {
     console.log("high fitness");
-    saveTrafficLight.dispose();
-    saveTrafficLight = new junction(TrafficLight.brain);
+    saveTrafficLight = TrafficLight.copy();
     saveTrafficLight.fitness = TrafficLight.fitness;
-    TrafficLight.mutate(0.1);
   } else if (saveTrafficLight.fitness >= TrafficLight.fitness) {
-    TrafficLight.dispose();
-    //saveTrafficLight.mutate(0.05);
-    TrafficLight = new junction(saveTrafficLight.brain);
-    TrafficLight.mutate(0.1);
+    TrafficLight = null;
+    TrafficLight = saveTrafficLight.copy();
   }
 }
 
@@ -24,6 +20,6 @@ function calculateFitness() {
     remain += carCount[i];
   }
   //console.log(remain);
-  TrafficLight.fitness = (carLeave - remain) / frameCount;
+  TrafficLight.fitness = pow(carLeave, 2) / frameCount;
   console.log(TrafficLight.fitness);
 }
