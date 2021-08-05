@@ -30,7 +30,7 @@ function setup() {
   //Cars.push(new addCar(random(direction), random(turnDirection)));
   //tf.setBackend("cpu");
   let savedBrain = NeuralNetwork.deserialize(savedJson);
-  TrafficLight = new junction(savedBrain);
+  TrafficLight = new junction();
   slider = createSlider(1, 20, 1);
   console.log("start");
   Direction = "left";
@@ -64,7 +64,7 @@ function draw() {
       }
     }
     frameCount++;
-    if (frameCount >= 5000) {
+    if (frameCount >= 6000) {
       nextGeneration();
       frameCount = 0;
       carLeave = 0;

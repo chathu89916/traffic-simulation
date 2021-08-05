@@ -49,14 +49,16 @@ class junction {
     for (let i = 0; i < output.length; i++) {
       maxAt = output[i] > output[maxAt] ? i : maxAt;
     }
+    // console.log(output);
+    // console.log(maxAt);
     if (maxAt == 0) {
-      this.counter1();
-    } else if (maxAt == 1) {
-      this.counter2();
-    } else if (maxAt == 2) {
       this.counter3();
-    } else if (maxAt == 3) {
+    } else if (maxAt == 1) {
       this.counter4();
+    } else if (maxAt == 2) {
+      this.counter1();
+    } else if (maxAt == 3) {
+      this.counter2();
     }
   }
 
