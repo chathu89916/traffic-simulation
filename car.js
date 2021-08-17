@@ -431,7 +431,7 @@ class addCar {
     angleMode(RADIANS);
     translate(this.pos.x, this.pos.y);
     rotate(this.heading);
-    fill("red");
+    fill(255, 0, 0, 60);
     rectMode(CENTER);
     rect(0, 0, 10, 20);
     pop();

@@ -1,4 +1,4 @@
-function mutate(x = 0.1) {
+function mutate(x) {
   if (random(1) < 0.1) {
     let offset = randomGaussian() * 0.5;
     let newx = x + offset;
@@ -16,6 +16,8 @@ class junction {
     this.rightLight = true;
     this.score = 0;
     this.fitness = 0;
+    this.Cars = [];
+    this.lightDirection;
     //this.brain = null;
 
     if (brain) {
@@ -30,6 +32,35 @@ class junction {
   //   this.brain.dispose();
   // }
 
+  runCar() {
+    if (this.Cars.length == 0) {
+      this.Cars.push(new addCar(random(direction), random(turnDirection)));
+    }
+
+    for (var i = this.Cars.length - 1; i >= 0; i--) {
+      this.Cars[i].follow();
+      this.Cars[i].lightCheck(this.lightDirection, this.Cars);
+      this.Cars[i].update();
+
+      let r = random(1);
+      if (r < 0.001 && this.Cars.length < numberofCars) {
+        this.Cars.push(new addCar(random(direction), random(turnDirection)));
+      }
+
+      // if (
+      //   Math.abs(initialPos.dist(this.Cars[this.Cars.length - 1].pos)) <
+      //     random(width / 2 - 300, width / 2 - 20) &&
+      //   this.Cars.length < numberofthis.Cars
+      // ) {
+      //   this.Cars.push(new addCar(random(direction), random(turnDirection)));
+      // }
+      if (this.Cars[i].pos.dist(initialPos) > 310) {
+        this.Cars.splice(i, 1);
+        this.score++;
+      }
+    }
+  }
+
   copy() {
     return new junction(this.brain);
   }
@@ -37,10 +68,10 @@ class junction {
   think(qLength) {
     let inputs = [];
     inputs = [
-      qLength[0] / 20,
-      qLength[1] / 20,
-      qLength[2] / 20,
-      qLength[3] / 20,
+      qLength[0] / numberofCars,
+      qLength[1] / numberofCars,
+      qLength[2] / numberofCars,
+      qLength[3] / numberofCars,
     ];
     //console.log(inputs);
     let output = this.brain.predict(inputs);
@@ -67,7 +98,7 @@ class junction {
     this.upLight = true;
     this.leftLight = true;
     this.rightLight = true;
-    lightDirection = "down";
+    this.lightDirection = "down";
   }
 
   counter2() {
@@ -75,7 +106,7 @@ class junction {
     this.upLight = false;
     this.leftLight = true;
     this.rightLight = true;
-    lightDirection = "up";
+    this.lightDirection = "up";
   }
 
   counter3() {
@@ -83,7 +114,7 @@ class junction {
     this.upLight = true;
     this.leftLight = false;
     this.rightLight = true;
-    lightDirection = "right";
+    this.lightDirection = "right";
   }
 
   counter4() {
@@ -91,17 +122,17 @@ class junction {
     this.upLight = true;
     this.leftLight = true;
     this.rightLight = false;
-    lightDirection = "left";
+    this.lightDirection = "left";
   }
 
   show() {
-    switch (lightDirection) {
+    switch (this.lightDirection) {
       case "down":
         push();
         strokeWeight(5.0);
         stroke("green");
         line(250, 250, 350, 250);
-        stroke("red");
+        stroke(255, 0, 0, 60);
         line(250, 350, 350, 350);
         line(250, 250, 250, 350);
         line(350, 250, 350, 350);
@@ -112,7 +143,7 @@ class junction {
         strokeWeight(5.0);
         stroke("green");
         line(250, 350, 350, 350);
-        stroke("red");
+        stroke(255, 0, 0, 60);
         line(250, 250, 350, 250);
         line(250, 250, 250, 350);
         line(350, 250, 350, 350);
@@ -123,7 +154,7 @@ class junction {
         strokeWeight(5.0);
         stroke("green");
         line(350, 250, 350, 350);
-        stroke("red");
+        stroke(255, 0, 0, 60);
         line(250, 350, 350, 350);
         line(250, 250, 250, 350);
         line(250, 250, 350, 250);
@@ -134,88 +165,37 @@ class junction {
         strokeWeight(5.0);
         stroke("green");
         line(250, 250, 250, 350);
-        stroke("red");
+        stroke(255, 0, 0, 60);
         line(250, 350, 350, 350);
         line(250, 250, 350, 250);
         line(350, 250, 350, 350);
         pop();
         break;
     }
+
+    for (var i = this.Cars.length - 1; i >= 0; i--) {
+      this.Cars[i].display();
+    }
   }
 
-  // lightDown() {
-  //   push();
-  //   var red = this.downLight;
-  //   strokeWeight(5.0);
-  //   if (red == true) {
-  //     stroke("red");
-  //   }
-  //   if (red == false) {
-  //     stroke("green");
-  //   }
-  //   line(250, 250, 350, 250);
-  //   pop();
-  // }
-  // lightUp() {
+  // roadOverlay() {
   //   push();
   //   strokeWeight(5.0);
-  //   var red = this.upLight;
-  //   strokeWeight(5.0);
-  //   if (red == true) {
-  //     stroke("red");
-  //   }
-  //   if (red == false) {
-  //     stroke("green");
-  //   }
-  //   line(250, 350, 350, 350);
+  //   stroke(150);
+  //   line(0, 250, 250, 250);
+  //   line(0, 350, 250, 350);
+  //   line(350, 250, width, 250);
+  //   line(350, 350, width, 350);
+  //   line(250, 0, 250, 250);
+  //   line(350, 0, 350, 250);
+  //   line(250, 350, 250, height);
+  //   line(350, 350, 350, height);
+  //   linedash(350, 300, width, 300, 15);
+  //   linedash(250, 300, 0, 300, 15);
+  //   linedash(300, 250, 300, 0, 15);
+  //   linedash(300, 350, 300, height, 15);
   //   pop();
   // }
-  // lightLeft() {
-  //   push();
-  //   strokeWeight(5.0);
-  //   var red = this.leftLight;
-  //   strokeWeight(5.0);
-  //   if (red == true) {
-  //     stroke("red");
-  //   }
-  //   if (red == false) {
-  //     stroke("green");
-  //   }
-
-  //   pop();
-  // }
-  // lightRight() {
-  //   push();
-  //   strokeWeight(5.0);
-  //   var red = this.rightLight;
-  //   strokeWeight(5.0);
-  //   if (red == true) {
-  //     stroke("red");
-  //   }
-  //   if (red == false) {
-  //     stroke("green");
-  //   }
-  //   line(350, 250, 350, 350);
-  //   pop();
-  // }
-  roadOverlay() {
-    push();
-    strokeWeight(5.0);
-    stroke(150);
-    line(0, 250, 250, 250);
-    line(0, 350, 250, 350);
-    line(350, 250, width, 250);
-    line(350, 350, width, 350);
-    line(250, 0, 250, 250);
-    line(350, 0, 350, 250);
-    line(250, 350, 250, height);
-    line(350, 350, 350, height);
-    linedash(350, 300, width, 300, 15);
-    linedash(250, 300, 0, 300, 15);
-    linedash(300, 250, 300, 0, 15);
-    linedash(300, 350, 300, height, 15);
-    pop();
-  }
 }
 
 function linedash(x1, y1, x2, y2, delta, style = "-") {
