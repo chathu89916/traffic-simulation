@@ -159,24 +159,6 @@ class addCar {
     this.acceleration.add(force);
   }
 
-  // signalcheck (red){
-  //     this.red =red;
-  //     if(this.red == 'left'){
-  //         if(this.direction == 'left'&& this.currentNode == 1){
-  //             let carV = createVector(0,0);
-  //             // let m = createVector(275,350);
-  //             // carV = m.sub(this.pos);
-  //             // carV.mult(-1);
-  //             // carV.normalize();
-  //             //carV.limit(this.maxforce);
-  //             //this.applyForce(carV);
-  //             let d = map[carV , createVector(0,0), this.maxforce, this.pos, createVector(275,350)];
-  //             console.log(d);
-  //         }
-
-  //     }
-  // }
-
   queueing(cars) {
     this.cars = cars;
     this.desiredseperation = 30;

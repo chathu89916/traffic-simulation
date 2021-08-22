@@ -1,9 +1,7 @@
-//Cars = [];
-var numberofCars = 20;
-var numberofSims = 20;
+var numberofCars = 25;
+var numberofSims = 25;
 let direction = ["down", "up", "left", "right"];
 let turnDirection = ["left", "right"];
-let lightDirection;
 let carLeave = 0;
 let frameCount = 0;
 let TrafficLight = [];
@@ -22,42 +20,13 @@ function keyPressed() {
   }
 }
 
-// if (keyCode === LEFT_ARROW) {
-//   TrafficLight.counter3();
-//   let tar = [1, 0, 0, 0];
-//   TrafficLight.brain.train(carCount, tar);
-// }
-// if (keyCode === RIGHT_ARROW) {
-//   TrafficLight.counter4();
-//   let tar = [0, 1, 0, 0];
-//   TrafficLight.brain.train(carCount, tar);
-// }
-// if (keyCode === UP_ARROW) {
-//   TrafficLight.counter1();
-//   let tar = [0, 0, 1, 0];
-//   TrafficLight.brain.train(carCount, tar);
-// }
-// if (keyCode === DOWN_ARROW) {
-//   TrafficLight.counter2();
-//   let tar = [0, 0, 0, 1];
-//   TrafficLight.brain.train(carCount, tar);
-// }
-//}
-
-// function preload() {
-//   savedJson = loadJSON("best5.json");
-// }
-
 function setup() {
   // put setup code here
   createCanvas(600, 600);
   frameRate(60);
   initialPos = createVector(width / 2, height / 2);
   noStroke();
-  //Cars.push(new addCar(random(direction), random(turnDirection)));
-  //tf.setBackend("cpu");
-  // let savedBrain = NeuralNetwork.deserialize(savedJson);
-  // TrafficLight = new junction(savedBrain);
+
   for (let i = 0; i < numberofSims; i++) {
     let light = new junction();
     TrafficLight[i] = light;
@@ -68,8 +37,6 @@ function setup() {
 }
 
 function draw() {
-  // put drawing code here
-
   for (let n = 0; n < slider.value(); n++) {
     for (let i = numberofSims - 1; i >= 0; i--) {
       TrafficLight[i].runCar();
@@ -77,33 +44,6 @@ function draw() {
       TrafficLight[i].think(carCount);
     }
 
-    //TrafficLight.think(carCount);
-    // if (Cars.length == 0) {
-    //   Cars.push(new addCar(random(direction), random(turnDirection)));
-    // }
-
-    // for (var i = Cars.length - 1; i >= 0; i--) {
-    //   Cars[i].follow();
-    //   Cars[i].lightCheck(lightDirection, Cars);
-    //   Cars[i].update();
-
-    //   let r = random(1);
-    //   if (r < 0.001 && Cars.length < numberofCars) {
-    //     Cars.push(new addCar(random(direction), random(turnDirection)));
-    //   }
-
-    //   // if (
-    //   //   Math.abs(initialPos.dist(Cars[Cars.length - 1].pos)) <
-    //   //     random(width / 2 - 300, width / 2 - 20) &&
-    //   //   Cars.length < numberofCars
-    //   // ) {
-    //   //   Cars.push(new addCar(random(direction), random(turnDirection)));
-    //   // }
-    //   if (Cars[i].pos.dist(initialPos) > 310) {
-    //     Cars.splice(i, 1);
-    //     carLeave++;
-    //   }
-    // }
     frameCount++;
     if (frameCount >= 10000) {
       calHigh();
@@ -121,7 +61,7 @@ function draw() {
 
   background(225);
   roadOverlay();
-  TrafficLight[1].show();
+  TrafficLight[0].show();
   // for (let i = 0; i < numberofSims; i++) {
   //   TrafficLight[i].show();
   // }
@@ -186,7 +126,6 @@ function calHigh() {
     highScore = tempHighScore;
     bestLight = tempJunction;
   } else {
-    //console.log(bestLight);
     tempHighScore = bestLight.score;
     if (tempHighScore > highScore) {
       highScore = tempHighScore;

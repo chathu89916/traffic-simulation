@@ -9,24 +9,6 @@ function nextGeneration() {
   activeLights = generate(TrafficLight);
   //console.log(activeLights);
   TrafficLight = activeLights.slice();
-  // console.log("Next Generation");
-  // calculateFitness();
-  // if (typeof saveTrafficLight == "undefined") {
-  //   console.log("no save junction");
-  //   saveTrafficLight = TrafficLight;
-  // } else if (
-  //   (saveTrafficLight.fitness - TrafficLight.fitness) /
-  //     saveTrafficLight.fitness <=
-  //   0.1
-  // ) {
-  //   console.log("high fitness");
-  //   saveTrafficLight = TrafficLight;
-  //   saveTrafficLight.fitness = TrafficLight.fitness;
-  //   TrafficLight = TrafficLight.copy();
-  // } else if (saveTrafficLight.fitness >= TrafficLight.fitness) {
-  //   TrafficLight = saveTrafficLight.copy();
-  //   TrafficLight.fitness = saveTrafficLight.fitness;
-  // }
 }
 
 function normalizeFitness(junc) {
@@ -61,13 +43,3 @@ function poolSelection(junc) {
   index -= 1;
   return junc[index].copy();
 }
-
-// function calculateFitness() {
-//   let remain = 0;
-//   for (let i = 0; i < carCount.length; i++) {
-//     remain += carCount[i];
-//   }
-//   console.log(remain);
-//   TrafficLight.fitness = pow(carLeave, 2) / frameCount;
-//   console.log(TrafficLight.fitness);
-// }

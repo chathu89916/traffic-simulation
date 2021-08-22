@@ -47,13 +47,6 @@ class junction {
         this.Cars.push(new addCar(random(direction), random(turnDirection)));
       }
 
-      // if (
-      //   Math.abs(initialPos.dist(this.Cars[this.Cars.length - 1].pos)) <
-      //     random(width / 2 - 300, width / 2 - 20) &&
-      //   this.Cars.length < numberofthis.Cars
-      // ) {
-      //   this.Cars.push(new addCar(random(direction), random(turnDirection)));
-      // }
       if (this.Cars[i].pos.dist(initialPos) > 310) {
         this.Cars.splice(i, 1);
         this.score++;
@@ -177,25 +170,6 @@ class junction {
       this.Cars[i].display();
     }
   }
-
-  // roadOverlay() {
-  //   push();
-  //   strokeWeight(5.0);
-  //   stroke(150);
-  //   line(0, 250, 250, 250);
-  //   line(0, 350, 250, 350);
-  //   line(350, 250, width, 250);
-  //   line(350, 350, width, 350);
-  //   line(250, 0, 250, 250);
-  //   line(350, 0, 350, 250);
-  //   line(250, 350, 250, height);
-  //   line(350, 350, 350, height);
-  //   linedash(350, 300, width, 300, 15);
-  //   linedash(250, 300, 0, 300, 15);
-  //   linedash(300, 250, 300, 0, 15);
-  //   linedash(300, 350, 300, height, 15);
-  //   pop();
-  // }
 }
 
 function linedash(x1, y1, x2, y2, delta, style = "-") {
