@@ -1,4 +1,4 @@
-function mutate(x) {
+function mutate(x = 0.01) {
   if (random(1) < 0.1) {
     let offset = randomGaussian() * 0.5;
     let newx = x + offset;

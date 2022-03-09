@@ -41,7 +41,10 @@ function draw() {
     for (let i = numberofSims - 1; i >= 0; i--) {
       TrafficLight[i].runCar();
       carCount = queuCars(TrafficLight[i].Cars);
-      TrafficLight[i].think(carCount);
+      if (frameCount > 0 && frameCount % 1000 === 0) {
+        //console.log('count');
+        TrafficLight[i].think(carCount);
+      }
     }
 
     frameCount++;
